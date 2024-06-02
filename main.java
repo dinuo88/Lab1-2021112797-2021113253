@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.*;
+import java.util.function.IntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,7 +11,7 @@ import java.util.regex.Pattern;
 public class main {
 
 
-    static int[][] graph = new int[20][20];
+    static int[][] graph = new int[1000][1000];
     static HashMap<String,Integer> map = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
@@ -28,14 +29,12 @@ public class main {
             in.nextLine();
             switch (n){
                 case 1:
-                    /**
-                     * TODO
-                     * 展示生成的有向图
-                     */
-                    Object[] array = map.entrySet().stream()
-                            .map(e -> e.getKey())
-                            .toList().toArray();
-                    String[] node = (String[]) array;
+                    Set<String> strings1 = map.keySet();
+                    List<String> strings = new ArrayList<>();
+                    for(String s : strings1){
+                        strings.add(s);
+                    }
+                    String[] node = strings.toArray(new String[0]);
 
                     List<String> list1 = new ArrayList<>();
                     List<String> list2 = new ArrayList<>();
@@ -50,8 +49,8 @@ public class main {
 
                     String[] edge = list1.toArray(new String[0]);
                     String[] weight = list2.toArray(new String[0]);
-
-
+                    Graph.start(node,edge,weight);
+                    break;
                 case 2:
                     System.out.print("输入两个英文单词（以空格为分界线）1");
                     String[] str = in.nextLine().split(" ");
