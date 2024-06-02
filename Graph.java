@@ -3,6 +3,7 @@ import java.io.File;
 public class Graph {
     public static void start(String[] nodes, String[] preline, String[] weight){
 
+
         Graphviz gv = new Graphviz();
         //定义每个节点的style
         String nodesty = "[style = record]";

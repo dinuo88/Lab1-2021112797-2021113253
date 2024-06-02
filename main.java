@@ -1,3 +1,5 @@
+import com.sun.source.tree.Tree;
+
 import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -17,7 +19,7 @@ public class main {
         Scanner in = new Scanner(System.in);
         System.out.print("功能1：请输入文件路径生成有向图：");
         String fileName = in.nextLine();
-        showDirectedGraph(fileName);
+        initGraph(fileName);
         System.out.println("-----------------------");
         System.out.println("图初始化完成");
 
@@ -46,8 +48,8 @@ public class main {
 
                     String[] edge = list1.toArray(new String[0]);
                     String[] weight = list2.toArray(new String[0]);
-
-
+                    showDirectedGraph();
+                    break;
                 case 2:
                     System.out.print("输入两个英文单词（以空格为分界线）1");
                     String[] str = in.nextLine().split(" ");
@@ -88,7 +90,7 @@ public class main {
         System.out.println("------------------------------------");
     }
 
-    public static void showDirectedGraph(String fileName) throws IOException {
+    public static void initGraph(String fileName) throws IOException {
         File file = new File(fileName);
         FileInputStream f1 = new FileInputStream(file);
         BufferedReader br = new BufferedReader(new InputStreamReader(f1));
@@ -98,7 +100,7 @@ public class main {
         Pattern p = Pattern.compile(regex);
 
         String line = null;
-        Tree head = new Tree();
+//        Tree head = new Tree();
 
 
         int k = 0;
@@ -127,6 +129,54 @@ public class main {
                     graph[i][j] = 100000;
             }
         }
+    }
+
+    public static void showDirectedGraph(){
+
+        Object[] array = map.entrySet().stream()
+                .map(e -> e.getKey())
+                .toList().toArray();
+        String[] nodes = (String[]) array;
+
+        List<String> list1 = new ArrayList<>();
+        List<String> list2 = new ArrayList<>();
+        for(int i = 0;i < map.size();i++){
+            for(int j = 0;j < map.size();j++){
+                if(graph[i][j] != 100000){
+                    list1.add(getKeyByValue(i) + " -> " + getKeyByValue(j));
+                    list2.add(String.valueOf(graph[i][j]));
+                }
+            }
+        }
+
+        String[] preline = list1.toArray(new String[0]);
+        String[] weight = list2.toArray(new String[0]);
+
+
+        Graphviz gv = new Graphviz();
+        //定义每个节点的style
+        String nodesty = "[style = record]";
+        //String linesty = "[dir=\"none\"]";
+
+        gv.addln(gv.start_graph());//SATRT
+        gv.addln("edge[style=\"dashed\"]");
+        gv.addln("size =\"8,8\";");
+        //设置节点的style
+        for(int i=0;i<nodes.length;i++){
+            gv.addln(nodes[i]+" "+nodesty);
+        }
+        for(int i=0;i<preline.length;i++){
+            gv.addln(preline[i]+" "+" [dir=\"forward\"]"+" "+" [label=\""+weight[i]+"\"]");
+        }
+        gv.addln(gv.end_graph());//END
+        //节点之间的连接关系输出到控制台
+        System.out.println(gv.getDotSource());
+        //输出什么格式的图片(gif,dot,fig,pdf,ps,svg,png,plain)
+        String type = "png";
+        //输出到文件夹以及命名
+        File out = new File("./Graph/Graph." + type);   // Linux
+        //File out = new File("c:/eclipse.ws/graphviz-java-api/out." + type);    // Windows
+        gv.writeGraphToFile( gv.getGraph( gv.getDotSource(), type ), out );
     }
 
     public static void queryBridgeWords(String word1, String word2){
