@@ -34,7 +34,7 @@ public class main {
                      */
                     Object[] array = map.entrySet().stream()
                             .map(e -> e.getKey())
-                            .toList().toArray();
+                            .toArray();
                     String[] node = (String[]) array;
 
                     List<String> list1 = new ArrayList<>();
