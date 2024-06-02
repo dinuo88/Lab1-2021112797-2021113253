@@ -17,7 +17,7 @@ public class main {
         Scanner in = new Scanner(System.in);
         System.out.print("功能1：请输入文件路径生成有向图：");
         String fileName = in.nextLine();
-        initGraph(fileName);
+        showDirectedGraph(fileName);
         System.out.println("-----------------------");
         System.out.println("图初始化完成");
 
@@ -28,10 +28,6 @@ public class main {
             in.nextLine();
             switch (n){
                 case 1:
-                    /**
-                     * TODO
-                     * 展示生成的有向图
-                     */
                     Object[] array = map.entrySet().stream()
                             .map(e -> e.getKey())
                             .toList().toArray();
@@ -60,19 +56,17 @@ public class main {
                 case 3:
                     System.out.print("请输入字符串文本：");
                     String str2 = in.nextLine();
-                    createNewString(str2);
+                    generateNewText(str2);
                     break;
                 case 4:
                     System.out.print("输入两个英文单词（以空格为分界线）2");
                     String[] str3 = in.nextLine().split(" ");
-                    shortestPath(str3[0],str3[1]);
+                    calcShortestPath(str3[0],str3[1]);
                     break;
                 case 5:
-                    System.out.print("请输入随机游走的开始单词：");
-                    String str4 = in.nextLine();
                     for(int i = 0;i < 4;i++){
                         System.out.print("第" + (i+1) + "次随机游走：");
-                        randomWalk(str4);
+                        randomWalk();
                     }
                     break;
                 case 6:
@@ -94,7 +88,7 @@ public class main {
         System.out.println("------------------------------------");
     }
 
-    public static void initGraph(String fileName) throws IOException {
+    public static void showDirectedGraph(String fileName) throws IOException {
         File file = new File(fileName);
         FileInputStream f1 = new FileInputStream(file);
         BufferedReader br = new BufferedReader(new InputStreamReader(f1));
@@ -203,7 +197,7 @@ public class main {
         return null;
     }
 
-    public static void createNewString(String str){
+    public static void generateNewText(String str){
 
         String regex = "[A-Za-z]+";
         Matcher m = null;
@@ -226,7 +220,7 @@ public class main {
         }
     }
 
-    public static void shortestPath(String word1,String word2){
+    public static void calcShortestPath(String word1,String word2){
         if (!map.containsKey(word1)){
             System.out.println("No " + word1 + " in the graph!");
         }
@@ -286,7 +280,7 @@ public class main {
         System.out.print("->" + getKeyByValue(end));
     }
 
-    public static void randomWalk(String word){
+    public static void randomWalk(){
 
         int[][] flag = new int[map.size()][map.size()];
         for(int i = 0;i < map.size();i++){
@@ -298,8 +292,8 @@ public class main {
                 }
             }
         }
-        int k = map.get(word);
-        System.out.print(word);
+        int k = 0;
+        System.out.print(getKeyByValue(k));
 
         while (true) {
             List<Integer> list = new ArrayList<>();
