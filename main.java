@@ -10,7 +10,9 @@ import java.util.regex.Pattern;
  * @Date: 2024/05/13/15:49
  */
 public class main {
-
+// xiugai
+    //xiugai B1
+    // xiugai B2
 
     static int[][] graph = new int[20][20];
     static HashMap<String,Integer> map = new HashMap<>();
@@ -19,7 +21,7 @@ public class main {
         Scanner in = new Scanner(System.in);
         System.out.print("功能1：请输入文件路径生成有向图：");
         String fileName = in.nextLine();
-        initGraph(fileName);
+        showDirectedGraph(fileName);
         System.out.println("-----------------------");
         System.out.println("图初始化完成");
 
@@ -30,10 +32,12 @@ public class main {
             in.nextLine();
             switch (n){
                 case 1:
-                    Object[] array = map.entrySet().stream()
-                            .map(e -> e.getKey())
-                            .toList().toArray();
-                    String[] node = (String[]) array;
+                    Set<String> strings1 = map.keySet();
+                    List<String> strings = new ArrayList<>();
+                    for(String s : strings1){
+                        strings.add(s);
+                    }
+                    String[] node = strings.toArray(new String[0]);
 
                     List<String> list1 = new ArrayList<>();
                     List<String> list2 = new ArrayList<>();
@@ -48,10 +52,10 @@ public class main {
 
                     String[] edge = list1.toArray(new String[0]);
                     String[] weight = list2.toArray(new String[0]);
-                    showDirectedGraph();
-                    break;
+                    Graph.start(node,edge,weight);
+
                 case 2:
-                    System.out.print("输入两个英文单词（以空格为分界线）1");
+                    System.out.print("输入两个英文单词（以空格为分界线）：");
                     String[] str = in.nextLine().split(" ");
                     queryBridgeWords(str[0],str[1]);
                     break;
@@ -61,7 +65,7 @@ public class main {
                     generateNewText(str2);
                     break;
                 case 4:
-                    System.out.print("输入两个英文单词（以空格为分界线）2");
+                    System.out.print("输入两个英文单词（以空格为分界线）：");
                     String[] str3 = in.nextLine().split(" ");
                     calcShortestPath(str3[0],str3[1]);
                     break;
@@ -90,7 +94,7 @@ public class main {
         System.out.println("------------------------------------");
     }
 
-    public static void initGraph(String fileName) throws IOException {
+    public static void showDirectedGraph(String fileName) throws IOException {
         File file = new File(fileName);
         FileInputStream f1 = new FileInputStream(file);
         BufferedReader br = new BufferedReader(new InputStreamReader(f1));
@@ -100,7 +104,6 @@ public class main {
         Pattern p = Pattern.compile(regex);
 
         String line = null;
-//        Tree head = new Tree();
 
 
         int k = 0;
@@ -129,54 +132,6 @@ public class main {
                     graph[i][j] = 100000;
             }
         }
-    }
-
-    public static void showDirectedGraph(){
-
-        Object[] array = map.entrySet().stream()
-                .map(e -> e.getKey())
-                .toList().toArray();
-        String[] nodes = (String[]) array;
-
-        List<String> list1 = new ArrayList<>();
-        List<String> list2 = new ArrayList<>();
-        for(int i = 0;i < map.size();i++){
-            for(int j = 0;j < map.size();j++){
-                if(graph[i][j] != 100000){
-                    list1.add(getKeyByValue(i) + " -> " + getKeyByValue(j));
-                    list2.add(String.valueOf(graph[i][j]));
-                }
-            }
-        }
-
-        String[] preline = list1.toArray(new String[0]);
-        String[] weight = list2.toArray(new String[0]);
-
-
-        Graphviz gv = new Graphviz();
-        //定义每个节点的style
-        String nodesty = "[style = record]";
-        //String linesty = "[dir=\"none\"]";
-
-        gv.addln(gv.start_graph());//SATRT
-        gv.addln("edge[style=\"dashed\"]");
-        gv.addln("size =\"8,8\";");
-        //设置节点的style
-        for(int i=0;i<nodes.length;i++){
-            gv.addln(nodes[i]+" "+nodesty);
-        }
-        for(int i=0;i<preline.length;i++){
-            gv.addln(preline[i]+" "+" [dir=\"forward\"]"+" "+" [label=\""+weight[i]+"\"]");
-        }
-        gv.addln(gv.end_graph());//END
-        //节点之间的连接关系输出到控制台
-        System.out.println(gv.getDotSource());
-        //输出什么格式的图片(gif,dot,fig,pdf,ps,svg,png,plain)
-        String type = "png";
-        //输出到文件夹以及命名
-        File out = new File("./Graph/Graph." + type);   // Linux
-        //File out = new File("c:/eclipse.ws/graphviz-java-api/out." + type);    // Windows
-        gv.writeGraphToFile( gv.getGraph( gv.getDotSource(), type ), out );
     }
 
     public static void queryBridgeWords(String word1, String word2){
@@ -270,11 +225,12 @@ public class main {
         }
     }
 
-    public static void calcShortestPath(String word1,String word2){
-        if (!map.containsKey(word1)){
+    public static void calcShortestPath(String word1, String word2) {
+        if (!map.containsKey(word1)) {
             System.out.println("No " + word1 + " in the graph!");
+            return;
         }
-        if(!map.containsKey(word2)){
+        if (!map.containsKey(word2)) {
             System.out.println("No " + word2 + " in the graph!");
             return;
         }
@@ -282,51 +238,48 @@ public class main {
         int start = map.get(word1);
         int end = map.get(word2);
         int[] flag = new int[map.size()];
-        int[] dist =  new int[map.size()];
+        int[] dist = new int[map.size()];
         int[] path = new int[map.size()];
-        for(int i = 0;i < map.size();i++){
+        for (int i = 0; i < map.size(); i++) {
             dist[i] = graph[start][i];
         }
         flag[start] = 1;
         int pre = start;
-        for(int i = 0;i < map.size() - 1;i++){
-            if(i == start){
-                continue;
-            }
+        for (int i = 0; i < map.size() - 1; i++) {
             int k = -1;
             int min = Integer.MAX_VALUE;
-            for(int j = 0;j < map.size();j++){
-                if(flag[i] == 1){
+            for (int j = 0; j < map.size(); j++) {
+                if (flag[j] == 1) {
                     continue;
                 }
-                if (min > dist[i]) {
-                    k = i;
-                    min = dist[i];
+                if (min > dist[j]) {
+                    k = j;
+                    min = dist[j];
                 }
             }
-//            path[k] = pre;
-//            pre = k;
+            path[k] = pre;
             flag[k] = 1;
-            for(int m = 0;m < map.size();m++){
-                if(m == start || m == k) continue;
-                if(dist[m] > dist[k] + graph[k][m]){
+            pre = k;
+            for (int m = 0; m < map.size(); m++) {
+                if (m == start || m == k) continue;
+                if (dist[m] > dist[k] + graph[k][m]) {
                     dist[m] = dist[k] + graph[k][m];
                     path[m] = k;
                 }
             }
         }
-        System.out.println("最短路径长度：" + dist[end]);;
+        System.out.println("最短路径长度：" + dist[end]);
         System.out.print("最短路径为：");
-        print(path,start,end);
+        print(path, start, end);
         System.out.println();
     }
 
-    public static void print(int[] path,int start,int end){
-        if(start == end){
+    public static void print(int[] path, int start, int end) {
+        if (start == end) {
             System.out.print(getKeyByValue(start));
             return;
         }
-        print(path,start,path[end]);
+        print(path, start, path[end]);
         System.out.print("->" + getKeyByValue(end));
     }
 
