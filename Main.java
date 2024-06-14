@@ -1,7 +1,19 @@
-import com.sun.source.tree.Tree;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
-import java.io.*;
-import java.util.*;
+
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.Scanner;
+import java.util.List;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,10 +21,7 @@ import java.util.regex.Pattern;
  * @Author dinuo
  * @Date: 2024/05/13/15:49
  */
-public class main {
-// xiugai
-    //xiugai B1
-    // xiugai B2
+public class Main {
 
     static int[][] graph = new int[20][20];
     static HashMap<String,Integer> map = new HashMap<>();
@@ -78,6 +87,9 @@ public class main {
                 case 6:
                     flag = 1;
                     break;
+                default:
+                    System.out.println("输入错误，请重新输入！");
+                    break;
             }
 
         }
@@ -97,7 +109,7 @@ public class main {
     public static void showDirectedGraph(String fileName) throws IOException {
         File file = new File(fileName);
         FileInputStream f1 = new FileInputStream(file);
-        BufferedReader br = new BufferedReader(new InputStreamReader(f1));
+        BufferedReader br = new BufferedReader(new InputStreamReader(f1,StandardCharsets.UTF_8));
 
         String regex = "[A-Za-z]+";
         Matcher m = null;
@@ -313,7 +325,9 @@ public class main {
                 System.out.print("->" + getKeyByValue(k));
             }else {
                 int size = list.size();
-                int random = (int) (Math.random() * size);
+//                int random = (int) (Math.random() * size);
+                SecureRandom secureRandom = new SecureRandom();
+                int random = secureRandom.nextInt(size);
                 if(flag[k][list.get(random)] == 0){
                     break;
                 }
