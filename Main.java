@@ -30,7 +30,7 @@ public class Main {
         Scanner in = new Scanner(System.in);
         System.out.print("功能1：请输入文件路径生成有向图：");
         String fileName = in.nextLine();
-        showDirectedGraph(fileName);
+        init(fileName);
         System.out.println("-----------------------");
         System.out.println("图初始化完成");
 
@@ -66,7 +66,7 @@ public class Main {
                 case 2:
                     System.out.print("输入两个英文单词（以空格为分界线）：");
                     String[] str = in.nextLine().split(" ");
-                    queryBridgeWords(str[0],str[1]);
+                    queryBridgeWords(graph,str[0],str[1]);
                     break;
                 case 3:
                     System.out.print("请输入字符串文本：");
@@ -106,7 +106,7 @@ public class Main {
         System.out.println("------------------------------------");
     }
 
-    public static void showDirectedGraph(String fileName) throws IOException {
+    public static void init(String fileName) throws IOException {
         File file = new File(fileName);
         FileInputStream f1 = new FileInputStream(file);
         BufferedReader br = new BufferedReader(new InputStreamReader(f1,StandardCharsets.UTF_8));
@@ -146,13 +146,17 @@ public class Main {
         }
     }
 
-    public static void queryBridgeWords(String word1, String word2){
+    public static String queryBridgeWords(int[][] graph,String word1, String word2){
+        String res = new String();
         if (!map.containsKey(word1)){
+            res = "No " + word1 + " in the graph!";
             System.out.println("No " + word1 + " in the graph!");
-        }
-        if(!map.containsKey(word2)){
-            System.out.println("No " + word2 + " in the graph!");
-            return;
+            if(!map.containsKey(word2)){
+                res = res + "\nNo " + word2 + " in the graph!";
+                System.out.println("No " + word2 + " in the graph!");
+                return res;
+            }
+            return res;
         }
 
         int start = map.get(word1);
@@ -169,16 +173,22 @@ public class Main {
         }
 
         if(str.isEmpty()){
+            res = "No bridge words from word1 to word2!";
             System.out.println("No bridge words from word1 to word2!");
         }else if(str.size() == 1){
+            res = "The bridge words from “" + word1 + "” to “" + word2 + "” is:" + str.get(0);
             System.out.println("The bridge words from “" + word1 + "” to “" + word2 + "” is:" + str.get(0));
         }else {
+            res = "The bridge words from “" + word1 + "” to “" + word2 + "” are:";
             System.out.print("The bridge words from “" + word1 + "” to “" + word2 + "” are:");
             for(int i = 0;i < str.size() - 1;i++){
+                res = res + str.get(i) + ",";
                 System.out.print(str.get(i) + ",");
             }
+            res = res + "and" + str.get(str.size() - 1) + ".";
             System.out.println("and " + str.get(str.size() - 1) + ".");
         }
+        return res;
     }
 
     public static List<String> queryBridgeWords1(String word1, String word2){
